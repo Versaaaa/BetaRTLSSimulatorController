@@ -4,17 +4,26 @@ const serverPath = "https://localhost:7157/Forklift/GetPosition";
 const serverPollingInterval = 100;
 
 const positionInformation = {
-  x: 0,
-  y: 0,
-  rotation: 0,
-  forkHeight: 0
+  valid: true,
+  x: 0.0,
+  y: 0.0,
+  orientation: 0.0,
+  loaded: false,
+  forkHeight: 0.0,
+  distance: 0.0
+}
+
+const positionNotification = {
+  forkliftId: 0,
+  partnerKey: "lorem ipsum",
+  position: positionInformation
 }
 
 const inputInformation = {
-  x: 0,
-  y: 0,
-  rotation: 0,
-  forkHeight: 0,
+  x: 0.0,
+  y: 0.0,
+  orientation: 0.0,
+  forkHeight: 0.0,
 }
 
 const tranSpeed = 1;
@@ -50,11 +59,11 @@ window.addEventListener("keydown", (event) => {
       break;
     }
     case "ArrowLeft": {
-      inputInformation.rotation = -1;
+      inputInformation.orientation = -1;
       break;
     }
     case "ArrowRight": {
-      inputInformation.rotation = +1;
+      inputInformation.orientation = +1;
       break;
     }
 
@@ -63,10 +72,17 @@ window.addEventListener("keydown", (event) => {
     }
 
     case "KeyR": {
-      positionInformation.x = 0;
-      positionInformation.y = 0;
-      positionInformation.rotation = 0;
-      positionInformation.forkHeight = 0;
+      positionInformation.valid = true;
+      
+      positionInformation.x = 0.0;
+      positionInformation.y = 0.0;
+      
+      positionInformation.orientation = 0.0;
+
+      positionInformation.loaded = false;
+      positionInformation.forkHeight = 0.0;
+      positionInformation.distance = 0.0;
+
     }
 
   }
@@ -74,12 +90,12 @@ window.addEventListener("keydown", (event) => {
   positionInformation.x += inputInformation.x * tranSpeed;
   positionInformation.y += inputInformation.y * tranSpeed;
 
-  positionInformation.rotation += inputInformation.rotation * rotSpeed;
+  positionInformation.orientation += inputInformation.orientation * rotSpeed;
   positionInformation.forkHeight += inputInformation.forkHeight * forkSpeed;
 
   informationDisplay.innerHTML = "position x: " + positionInformation.x + "<br>"
                                + "position y: " + positionInformation.y + "<br>"
-                               + "rotation: " + positionInformation.rotation + "<br>"
+                               + "orientation: " + positionInformation.orientation + "<br>"
                                + "forkHeight: " + positionInformation.forkHeight + "<br>";
 });
 
@@ -110,11 +126,11 @@ window.addEventListener("keyup", (event) => {
       break;
     }
     case "ArrowLeft": {
-      inputInformation.rotation += (1 - inputInformation.rotation) / 2;
+      inputInformation.orientation += (1 - inputInformation.orientation) / 2;
       break;
     }
     case "ArrowRight": {
-      inputInformation.rotation -= (1 + inputInformation.rotation) / 2;
+      inputInformation.orientation -= (1 + inputInformation.orientation) / 2;
       break;
     }
   }
@@ -128,7 +144,7 @@ function sendToApi() {
   const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(positionInformation)
+      body: JSON.stringify(positionNotification)
   };
   fetch('https://localhost:7157/Forklift/PutPosition', requestOptions)
 }

@@ -28,7 +28,7 @@ const inputInformation = {
 
 const tranSpeed = 1;
 const forkSpeed = 1;
-const rotSpeed = 1;
+const rotSpeed = 10;
 
 const informationDisplay = document.createElement("p");
 
@@ -90,7 +90,10 @@ window.addEventListener("keydown", (event) => {
   positionInformation.x += inputInformation.x * tranSpeed;
   positionInformation.y += inputInformation.y * tranSpeed;
 
-  positionInformation.orientation += inputInformation.orientation * rotSpeed;
+  positionInformation.orientation = (positionInformation.orientation + inputInformation.orientation * rotSpeed) % 360;
+  if(positionInformation.orientation < 0) {
+    positionInformation.orientation += 360; 
+  } 
   positionInformation.forkHeight += inputInformation.forkHeight * forkSpeed;
 
   informationDisplay.innerHTML = "position x: " + positionInformation.x + "<br>"

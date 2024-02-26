@@ -26,9 +26,9 @@ const inputInformation = {
   forkHeight: 0.0,
 }
 
-const tranSpeed = 1;
+const tranSpeed = 0.5;
 const forkSpeed = 1;
-const rotSpeed = 10;
+const rotSpeed = 5;
 
 const informationDisplay = document.createElement("p");
 
